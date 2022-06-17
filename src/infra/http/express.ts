@@ -1,5 +1,5 @@
 import express from "express";
-import { ExpressAdapter } from "../../adapter/Express.Adapter";
+import { ExpressAdapter } from "../../adapter/ExpressAdapter";
 import { ServicoController } from "../../controller/ServicoController";
 
 const app = express();
