@@ -8,7 +8,7 @@ import { ServicoRepositorySqLite } from "../src/infra/repository/ServicoReposito
 
 test("[SQLITE] DADO um serviço {A} e um serviço {B} {ouvindo portas} QUANDO {A} tentar conectar em {B} DEVE criar uma conexão", async function () {
   // arrange
-  const repository = new ServicoRepositorySqLite();
+  const repository = new ServicoRepositorySqLite({ memoria: true });
   const obterServicoPorNome = new ObterServicoPorNome(repository);
   const destino = await obterServicoPorNome.execute("mssql");
   const cadastrarOuvinte = new CadastrarOuvinte(repository);
@@ -26,7 +26,6 @@ test("[SQLITE] DADO um serviço {A} e um serviço {B} {ouvindo portas} QUANDO {A
   expect(actual.ip).toBe("127.0.0.1");
   expect(actual.porta).toBe(1433);
 });
-
 
 test("DADO um serviço {A} e um serviço {B} {ouvindo portas} QUANDO {A} tentar conectar em {B} DEVE criar uma conexão", async function () {
   // arrange

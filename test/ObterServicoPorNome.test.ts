@@ -3,7 +3,7 @@ import { ServicoRepositorySqLite } from "../src/infra/repository/ServicoReposito
 
 test("DADO um nome {A} DEVE obter um serviço", async function () {
   // arrange
-  const repository = new ServicoRepositorySqLite();
+  const repository = new ServicoRepositorySqLite({ memoria: true });
 
   // act
   const target = new ObterServicoPorNome(repository);
@@ -15,7 +15,7 @@ test("DADO um nome {A} DEVE obter um serviço", async function () {
 
 test("DADO um nome {B} DEVE obter um serviço", async function () {
   // arrange
-  const repository = new ServicoRepositorySqLite();
+  const repository = new ServicoRepositorySqLite({ memoria: true });
 
   // act
   const target = new ObterServicoPorNome(repository);

@@ -1,9 +1,25 @@
+import { Database } from "sqlite/build/Database";
 import { ServicoAdapter } from "../../adapter/ServicoAdapter";
 import { Servico } from "../../core/entity/Servico";
 import { ServicoRepository } from "../../core/repository/ServicoRepository";
 import { database } from "../database/database";
+import * as sqlite3 from "sqlite3";
 
 export class ServicoRepositorySqLite implements ServicoRepository {
+  #database: Database<sqlite3.Database, sqlite3.Statement>;
+
+  constructor(private readonly _configuracoes: { memoria: boolean } = { memoria: false }) {}
+
+  async adicionar(nome: string): Promise<Servico | undefined> {
+    const db = await this._database();
+    const SQL = `INSERT INTO Servicos (Nome) VALUES (?)`;
+
+    await db.run(SQL, nome);
+    const retorno = await this.obterPorNome(nome);
+
+    return retorno;
+  }
+
   async obterPorIpPorta(ip: string, porta: number): Promise<Servico | undefined> {
     const data = await this._obterPorIpPorta(ip, porta);
     if (!data) return undefined;
@@ -46,7 +62,9 @@ export class ServicoRepositorySqLite implements ServicoRepository {
   }
 
   private async _database() {
-    return await database({ memory: true });
+    if (this.#database) return this.#database;
+    this.#database = await database({ memory: this._configuracoes.memoria });
+    return this.#database;
   }
 
   private async _obterPorIpPorta(ip: string, porta: number) {
@@ -110,7 +128,7 @@ export class ServicoRepositorySqLite implements ServicoRepository {
                     WHERE Origem.Nome = ?`;
 
     const data = await db.all<{ origem: string; ip: string; porta: number; ouvindo: number }[]>(SQL, nome);
-    const retorno = data.map(p => ({...p, ouvindo: p.ouvindo === 1}));
+    const retorno = data.map((p) => ({ ...p, ouvindo: p.ouvindo === 1 }));
 
     return retorno;
   }

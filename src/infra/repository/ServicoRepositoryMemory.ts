@@ -15,6 +15,13 @@ export class ServicoRepositoryMemory implements ServicoRepository {
     this._servicos = [{ nome: "backend" }, { nome: "mssql" }];
   }
 
+  adicionar(nome: string): Promise<Servico | undefined> {
+    this._servicos.push({ nome });
+    const retorno = ServicoAdapter.create(nome, [], []);
+
+    return Promise.resolve(retorno);
+  }
+
   obterPorIpPorta(ip: string, porta: number): Promise<Servico | undefined> {
     const ouvinte = this._ouvintes.find((p) => p.ip === ip && p.porta === porta);
     if (!ouvinte) return Promise.resolve(undefined);

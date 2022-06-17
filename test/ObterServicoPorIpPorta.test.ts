@@ -3,7 +3,7 @@ import { ServicoRepositorySqLite } from "../src/infra/repository/ServicoReposito
 
 test("DADO um ip {A} e porta {B} DEVE obter um serviço", async function () {
   // arrange
-  const repository = new ServicoRepositorySqLite();
+  const repository = new ServicoRepositorySqLite({memoria: true});
 
   // act
   const target = new ObterServicoPorIpPorta(repository);

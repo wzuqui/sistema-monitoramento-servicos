@@ -1,4 +1,26 @@
 {
-  "cSpell.words": ["conexao", "Conexao", "conexoes", "premain", "servico", "Servico", "servicos", "usecase"],
-  "editor.minimap.maxColumn": 420
+  "cSpell.words": [
+    "conexao",
+    "Conexao",
+    "conexoes",
+    "configuracoes",
+    "premain",
+    "servico",
+    "Servico",
+    "servicos",
+    "usecase"
+  ],
+  "editor.minimap.maxColumn": 420,
+  "material-icon-theme.folders.associations": {
+    "adapter": "routes",
+    "entity": "log",
+    "http": "global",
+    "infra": "container",
+    "migrations": "packages",
+    "repository": "dump",
+    "usecase": "class"
+  },
+  "files.exclude": {
+    "**/node_modules": true
+  }
 }
