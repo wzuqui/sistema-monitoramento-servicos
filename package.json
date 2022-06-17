@@ -5,15 +5,19 @@
   "author": "Willian Luis Zuqui <willianluiszuqui@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "main": "tsc && node ./dist/main.js",
+    "main": "tsc && node ./dist/src/main.js",
     "test": "tsc && jest ./dist",
-    "pretest": "rm -rf ./dist/"
+    "pretest": "rm -rf ./dist/",
+    "premain": "rm -rf ./dist/",
+    "migrations:add": "touch ./migrations/`date +%Y%m%d%H%M%S`-migration.sql"
   },
   "devDependencies": {
     "typescript": "^4.7.3"
   },
   "dependencies": {
     "@types/jest": "^28.1.1",
-    "jest": "^28.1.1"
+    "jest": "^28.1.1",
+    "sqlite": "^4.1.1",
+    "sqlite3": "^5.0.8"
   }
 }
