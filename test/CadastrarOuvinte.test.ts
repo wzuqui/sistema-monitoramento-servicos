@@ -11,7 +11,7 @@ test("DADO um serviço {A} QUANDO tentar cadastrar um ouvinte {IP} e {PORTA} DEV
 
   // act
   const target = new CadastrarOuvinte(repository);
-  const actual = await target.execute(origem.nome, "127.0.0.1", 1433);
+  const actual = await target.execute(origem.nome, "127.0.0.1", 1433, true);
 
   // assert
   expect(actual).not.toBeNull();
@@ -27,7 +27,7 @@ test("DADO um serviço {A} QUANDO tentar cadastrar um ouvinte {IP inválido} e {
 
   // act
   const target = new CadastrarOuvinte(repository);
-  const actual = async () => await target.execute(origem.nome, "127.X.X.1", 1433);
+  const actual = async () => await target.execute(origem.nome, "127.X.X.1", 1433, true);
 
   // assert
   await expect(actual()).rejects.toThrow(IpInvalidoError);

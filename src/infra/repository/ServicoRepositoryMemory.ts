@@ -2,21 +2,17 @@ import { ServicoAdapter } from "../../adapter/ServicoAdapter";
 import { Servico } from "../../core/entity/Servico";
 import { ServicoRepository } from "../../core/repository/ServicoRepository";
 
-type Conexao = { origem: string; destino: string; ip: string; porta: number };
-type Ouvinte = { origem: string; ip: string; porta: number };
+type DbSet<T> = T;
 
 export class ServicoRepositoryMemory implements ServicoRepository {
-  private _conexoes: Conexao[];
-  private _ouvintes: Ouvinte[];
-  private _servicos: Servico[];
+  private _conexoes: DbSet<{ origem: string; destino: string; ip: string; porta: number }>[];
+  private _ouvintes: DbSet<{ origem: string; ip: string; porta: number; ouvindo: boolean }>[];
+  private _servicos: DbSet<{ nome: string }>[];
 
   constructor() {
     this._conexoes = [];
     this._ouvintes = [];
-    this._servicos = [
-      { nome: "backend", conexoes: [], ouvintes: [] },
-      { nome: "mssql", conexoes: [], ouvintes: [] },
-    ];
+    this._servicos = [{ nome: "backend" }, { nome: "mssql" }];
   }
 
   obterPorIpPorta(ip: string, porta: number): Promise<Servico | undefined> {
@@ -49,8 +45,8 @@ export class ServicoRepositoryMemory implements ServicoRepository {
     return Promise.resolve();
   }
 
-  salvarOuvinte(origem: string, ip: string, porta: number): Promise<void> {
-    this._ouvintes.push({ origem, ip, porta });
+  salvarOuvinte(origem: string, ip: string, porta: number, ouvindo: boolean): Promise<void> {
+    this._ouvintes.push({ origem, ip, porta, ouvindo });
     return Promise.resolve();
   }
 }

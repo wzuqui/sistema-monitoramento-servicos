@@ -9,14 +9,14 @@ export class CadastrarOuvinte {
     this._repository = repository;
   }
 
-  async execute(nome: string, ip: string, porta: number) {
+  async execute(nome: string, ip: string, porta: number, ouvindo: boolean) {
     if (this._ipInvalido(ip)) throw new IpInvalidoError(ip);
 
     const origem = await this._repository.obterPorNome(nome);
     if (!origem) throw new NaoExisteServicoNomeError(nome);
 
-    const retorno = { origem: origem.nome, ip, porta };
-    await this._repository.salvarOuvinte(retorno.origem, retorno.ip, retorno.porta);
+    const retorno = { origem: origem.nome, ip, porta, ouvindo };
+    await this._repository.salvarOuvinte(retorno.origem, retorno.ip, retorno.porta, ouvindo);
 
     return retorno;
   }
