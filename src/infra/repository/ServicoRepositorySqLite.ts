@@ -109,7 +109,9 @@ export class ServicoRepositorySqLite implements ServicoRepository {
                     INNER JOIN Servicos AS Origem ON Ouvinte.OrigemId = Origem.Id
                     WHERE Origem.Nome = ?`;
 
-    const data = await db.all<{ origem: string; ip: string; porta: number; ouvindo: boolean }[]>(SQL, nome);
-    return data;
+    const data = await db.all<{ origem: string; ip: string; porta: number; ouvindo: number }[]>(SQL, nome);
+    const retorno = data.map(p => ({...p, ouvindo: p.ouvindo === 1}));
+
+    return retorno;
   }
 }
