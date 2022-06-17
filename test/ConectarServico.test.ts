@@ -4,6 +4,29 @@ import { NaoExisteServicoIpPortaError } from "../src/core/usecase/errors/NaoExis
 import { ServicoNaoEstaOuvindoIpPortaError } from "../src/core/usecase/errors/ServicoNaoEstaOuvindoIpPortaError";
 import { ObterServicoPorNome } from "../src/core/usecase/ObterServicoPorNome";
 import { ServicoRepositoryMemory } from "../src/infra/repository/ServicoRepositoryMemory";
+import { ServicoRepositorySqLite } from "../src/infra/repository/ServicoRepositorySqLite";
+
+test("[SQLITE] DADO um serviço {A} e um serviço {B} {ouvindo portas} QUANDO {A} tentar conectar em {B} DEVE criar uma conexão", async function () {
+  // arrange
+  const repository = new ServicoRepositorySqLite();
+  const obterServicoPorNome = new ObterServicoPorNome(repository);
+  const destino = await obterServicoPorNome.execute("mssql");
+  const cadastrarOuvinte = new CadastrarOuvinte(repository);
+  const ouvinte = await cadastrarOuvinte.execute(destino.nome, "127.0.0.1", 1433, true);
+
+  // act
+  const target = new ConectarServico(repository);
+  const origem = await obterServicoPorNome.execute("backend");
+  const actual = await target.execute(origem.nome, ouvinte.ip, ouvinte.porta);
+
+  // assert
+  expect(actual).not.toBeNull();
+  expect(actual.origem.toLowerCase()).toBe("backend");
+  expect(actual.destino.toLowerCase()).toBe("mssql");
+  expect(actual.ip).toBe("127.0.0.1");
+  expect(actual.porta).toBe(1433);
+});
+
 
 test("DADO um serviço {A} e um serviço {B} {ouvindo portas} QUANDO {A} tentar conectar em {B} DEVE criar uma conexão", async function () {
   // arrange

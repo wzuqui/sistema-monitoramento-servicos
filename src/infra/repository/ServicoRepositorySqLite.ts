@@ -22,37 +22,70 @@ export class ServicoRepositorySqLite implements ServicoRepository {
     return retorno;
   }
 
-  salvarConexao(origem: string, destino: string, ip: string, porta: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async salvarConexao(origem: string, destino: string, ip: string, porta: number): Promise<void> {
+    const db = await this._database();
+    const SQL = `INSERT INTO Conexoes (OrigemId, DestinoId, Ip, Porta) VALUES (?, ?, ?, ?)`;
+
+    const origem_data = await this._obterPorNome(origem);
+    if (!origem_data) throw new Error(`Serviço ${origem} não encontrado`);
+
+    const destino_data = await this._obterPorNome(destino);
+    if (!destino_data) throw new Error(`Serviço ${destino} não encontrado`);
+
+    await db.run(SQL, origem_data.id, destino_data.id, ip, porta);
   }
 
-  salvarOuvinte(origem: string, ip: string, porta: number, ouvindo: boolean): Promise<void> {
-    throw new Error("Method not implemented.");
+  async salvarOuvinte(origem: string, ip: string, porta: number, ouvindo: boolean): Promise<void> {
+    const db = await this._database();
+    const SQL = `INSERT INTO Ouvintes (OrigemId, Ip, Porta, Ouvindo) VALUES (?, ?, ?, ?)`;
+
+    const data = await this._obterPorNome(origem);
+    if (!data) throw new Error(`Serviço ${origem} não encontrado`);
+
+    await db.run(SQL, data.id, ip, porta, ouvindo);
+  }
+
+  private async _database() {
+    return await database({ memory: true });
   }
 
   private async _obterPorIpPorta(ip: string, porta: number) {
-    const db = await database;
-    const SQL = `SELECT Nome as nome
+    const db = await this._database();
+    const SQL = `SELECT Servico.Id as id
+                      , Nome as nome
                     FROM Servicos AS Servico
                     INNER JOIN Ouvintes AS Ouvinte ON Servico.Id = Ouvinte.OrigemId
                     WHERE Ouvinte.Ip = ? AND Ouvinte.Porta =?`;
 
-    const data = await db.get<{ nome: string }>(SQL, ip, porta);
+    const data = await db.get<{ id: number; nome: string }>(SQL, ip, porta);
     if (!data) return undefined;
-    return { nome: data.nome, conexoes: await this._obterConexoes(data.nome), ouvintes: await this._obterOuvintes(data.nome) };
+    return {
+      id: data.id,
+      nome: data.nome,
+      conexoes: await this._obterConexoes(data.nome),
+      ouvintes: await this._obterOuvintes(data.nome),
+    };
   }
 
   private async _obterPorNome(nome: string) {
-    const db = await database;
-    const SQL = `SELECT Nome as nome FROM Servicos WHERE Nome = ?`;
+    const db = await this._database();
+    const SQL = `SELECT Id as id
+                      , Nome as nome
+                    FROM Servicos
+                    WHERE Nome = ?`;
 
-    const data = await db.get<{ nome: string }>(SQL, nome);
+    const data = await db.get<{ id: number; nome: string }>(SQL, nome);
     if (!data) return undefined;
-    return { nome: data.nome, conexoes: await this._obterConexoes(nome), ouvintes: await this._obterOuvintes(nome) };
+    return {
+      id: data.id,
+      nome: data.nome,
+      conexoes: await this._obterConexoes(nome),
+      ouvintes: await this._obterOuvintes(nome),
+    };
   }
 
   private async _obterConexoes(nome: string) {
-    const db = await database;
+    const db = await this._database();
     const SQL = `SELECT Origem.Nome AS origem
                       , Destino.Nome AS destino
                       , Conexao.Ip AS ip
@@ -67,7 +100,7 @@ export class ServicoRepositorySqLite implements ServicoRepository {
   }
 
   private async _obterOuvintes(nome: string) {
-    const db = await database;
+    const db = await this._database();
     const SQL = `SELECT Origem.Nome AS origem
                       , Ouvinte.Ip AS ip
                       , Ouvinte.Porta AS porta
