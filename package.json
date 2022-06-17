@@ -1,0 +1,19 @@
+{
+  "name": "sistema-monitoramento-servicos",
+  "version": "1.0.0",
+  "repository": "https://github.com/wzuqui/sistema-monitoramento-servicos",
+  "author": "Willian Luis Zuqui <willianluiszuqui@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "main": "tsc && node ./dist/main.js",
+    "test": "tsc && jest ./dist",
+    "pretest": "rm -rf ./dist/"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@types/jest": "^28.1.1",
+    "jest": "^28.1.1"
+  }
+}
