@@ -1,8 +1,9 @@
+import { ServicoAdapter } from "../../adapter/ServicoAdapter";
+import { Servico } from "../../core/entity/Servico";
 import { ServicoRepository } from "../../core/repository/ServicoRepository";
 
 type Conexao = { origem: string; destino: string; ip: string; porta: number };
 type Ouvinte = { origem: string; ip: string; porta: number };
-type Servico = { nome: string; conexoes: Conexao[]; ouvintes: Ouvinte[] };
 
 export class ServicoRepositoryMemory implements ServicoRepository {
   private _conexoes: Conexao[];
@@ -22,23 +23,23 @@ export class ServicoRepositoryMemory implements ServicoRepository {
     const ouvinte = this._ouvintes.find((p) => p.ip === ip && p.porta === porta);
     if (!ouvinte) return Promise.resolve(undefined);
 
-    const servico = this._servicos.find((p) => p.nome === ouvinte.origem);
-    if (!servico) return Promise.resolve(undefined);
+    const data = this._servicos.find((p) => p.nome === ouvinte.origem);
+    if (!data) return Promise.resolve(undefined);
 
-    const ouvintes = this._ouvintes.filter((p) => p.origem === servico.nome);
-    const conexoes = this._conexoes.filter((p) => p.origem === servico.nome);
-    const retorno = { nome: servico.nome, conexoes, ouvintes };
+    const ouvintes = this._ouvintes.filter((p) => p.origem === data.nome);
+    const conexoes = this._conexoes.filter((p) => p.origem === data.nome);
+    const retorno = ServicoAdapter.create(data.nome, conexoes, ouvintes);
 
     return Promise.resolve(retorno);
   }
 
   obterPorNome(nome: string): Promise<Servico | undefined> {
-    const servico = this._servicos.find((p) => p.nome === nome);
-    if (!servico) return Promise.resolve(undefined);
+    const data = this._servicos.find((p) => p.nome === nome);
+    if (!data) return Promise.resolve(undefined);
 
-    const ouvintes = this._ouvintes.filter((p) => p.origem === servico.nome);
-    const conexoes = this._conexoes.filter((p) => p.origem === servico.nome);
-    const retorno = { nome: servico.nome, conexoes, ouvintes };
+    const ouvintes = this._ouvintes.filter((p) => p.origem === data.nome);
+    const conexoes = this._conexoes.filter((p) => p.origem === data.nome);
+    const retorno = ServicoAdapter.create(data.nome, conexoes, ouvintes);
 
     return Promise.resolve(retorno);
   }
