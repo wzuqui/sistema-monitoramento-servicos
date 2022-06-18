@@ -1,6 +1,6 @@
+import { ExpressAdapter } from "@/adapters";
+import { ServicoController } from "@/controllers";
 import express from "express";
-import { ExpressAdapter } from "../../adapters/express";
-import { ServicoController } from "../../controllers/ServicoController";
 
 const app = express();
 

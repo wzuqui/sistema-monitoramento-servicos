@@ -1,6 +1,6 @@
+import { HapiAdapter } from "@/adapters";
+import { ServicoController } from "@/controllers";
 import hapi from "@hapi/hapi";
-import { HapiAdapter } from "../../adapters/hapi";
-import { ServicoController } from "../../controllers/ServicoController";
 
 const server = hapi.server({
   port: process.env.PORT || 3000,

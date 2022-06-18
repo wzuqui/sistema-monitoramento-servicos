@@ -1,8 +1,8 @@
+import { ServicoAdapter } from "@/adapters";
+import { Servico } from "@/domain/entities";
+import { ServicoRepository } from "@/domain/repositories";
+import { database } from "@/infra/databases";
 import { Database } from "sqlite/build/Database";
-import { ServicoAdapter } from "../../adapters/servico";
-import { Servico } from "../../domain/entities/servico";
-import { ServicoRepository } from "../../domain/repositories/servico";
-import { database } from "../databases/database";
 import * as sqlite3 from "sqlite3";
 
 export class ServicoRepositorySqLite implements ServicoRepository {
