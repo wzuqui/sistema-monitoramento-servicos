@@ -8,17 +8,19 @@
     "servico",
     "Servico",
     "servicos",
-    "usecase"
+    "usecase",
+    "usecases"
   ],
   "editor.minimap.maxColumn": 420,
   "material-icon-theme.folders.associations": {
-    "adapter": "routes",
-    "entity": "log",
-    "http": "global",
+    "adapters": "routes",
+    "domain": "core",
+    "entities": "log",
+    "https": "global",
     "infra": "container",
     "migrations": "packages",
-    "repository": "dump",
-    "usecase": "class"
+    "repositories": "dump",
+    "usecases": "class"
   },
   "files.exclude": {
     "**/node_modules": true

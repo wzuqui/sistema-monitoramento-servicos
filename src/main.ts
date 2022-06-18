@@ -1,4 +1,4 @@
-import { database } from "./infra/database/database";
+import { database } from "@/infra/databases";
 
 (async () => {
   const db = await database();
